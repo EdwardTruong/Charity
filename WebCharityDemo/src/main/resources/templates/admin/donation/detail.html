@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>DONATION DETAIL</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+	rel="stylesheet" />
+<link th:href="@{/admin1/assets/css/styles.css}" rel="stylesheet" />
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	crossorigin="anonymous"></script>
+<script th:src="@{/admin1/assets/js/scripts.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
+	crossorigin="anonymous"></script>
+
+<script th:src="@{/admin1/assets/js/datatables-simple-demo.js}"></script>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+<!-- New -->
+<link rel="stylesheet" th:href="@{/user/assets/css/custom-bs.css}">
+<link rel="stylesheet" th:href="@{/user/assets/css/style.css}">
+
+<!--Nút bấm mở table nhỏ-->
+<script th:src="@{/user/assets/js/jquery.min.js}"></script>
+<script th:src="@{/user/assets/js/bootstrap.bundle.min.js}"></script>
+<!--Nút bấm mở table nhỏ-->
+
+<script th:src="@{/user/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/user/assets/js/stickyfill.min.js}"></script>
+<script th:src="@{/user/assets/js/jquery.fancybox.min.js}"></script>
+<script th:src="@{/user/assets/js/jquery.easing.1.3.js}"></script>
+
+<script th:src="@{/user/assets/js/jquery.waypoints.min.js}"></script>
+<script th:src="@{/user/assets/js/jquery.animateNumber.min.js}"></script>
+<script th:src="@{/user/assets/js/owl.carousel.min.js}"></script>
+<script th:src="@{/user/assets/js/bootstrap-select.min.js}"></script>
+<script th:src="@{/user/assets/js/custom.js}"></script>
+<script th:src="@{/user/assets/js/newJs.js}"></script>
+<script src="js/JQuery3.3.1.js"></script>
+
+<!--End NEW -->
+</head>
+
+<body class="sb-nav-fixed">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<nav th:fragment="html_nav"
+			class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+			<!-- Navbar Brand-->
+			<a class="navbar-brand ps-3" th:href="@{/admin/home}">QUẢN TRỊ</a>
+			<!-- Sidebar Toggle-->
+			<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+				id="sidebarToggle" href="#!">
+				<i class="fas fa-bars"></i>
+			</button>
+			<!-- Navbar Search-->
+			<form
+				class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+
+			</form>
+			<!-- Navbar-->
+			<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+				<li class="nav-item dropdown"><a th:if="${session.admin}"
+					class="nav-link dropdown-toggle" th:href="@{/logout}" role="button"><i
+						class="fas fa-user fa-fw"></i><span> Logout</span></a>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="navbarDropdown1">
+						<li><a class="dropdown-item" href="#">Settings</a></li>
+						<li><a class="dropdown-item" href="#">Activity Log</a></li>
+						<li>
+							<hr class="dropdown-divider" />
+						</li>
+						<li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+					</ul></li>
+			</ul>
+		</nav>
+	</nav>
+
+	<div id="layoutSidenav">
+		<!--Cái Nav-->
+		<div id="layoutSidenav_nav">
+			<div th:fragment="html_menu" id="layoutSidenav_nav">
+				<nav class="sb-sidenav accordion sb-sidenav-dark"
+					id="sidenavAccordion">
+					<div class="sb-sidenav-menu">
+						<div class="nav">
+							<a class="nav-link" th:href="@{/admin/users}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý người dùng
+							</a> <a class="nav-link" th:href="@{/admin/donations}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý đợt quyên góp
+							</a>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		<div id="layoutSidenav_content">
+			<main>
+				<div class="container-fluid px-4">
+					<div class="card mb-4">
+						<div class="card-header d-flex justify-content-around">
+							<h3 class="mt-4" th:text="${pageTitle}"></h3>
+						</div>
+						<div th:if="${message}" class="alert alert-success text-center">
+							[[${message}]]</div>
+						<div class="card-body">
+							<!--Detail-->
+							<div class="row">
+								<div class="col-6">
+									<label class="col-fo rm-label">Mã đợt quyên góp:</label> <span
+										class="form-control" readonly="readonly"
+										th:text="${donation.code}"></span>
+								</div>
+								<div class="col-6">
+									<label class="col-fo rm-label">Tên đợt quyên góp:</label> <span
+										class="form-control" readonly="readonly"
+										th:text="${donation.name}"></span>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-6">
+									<label class="col-form-label">Ngày bắt đầu:</label> <span
+										class="form-control" readonly="readonly"
+										th:text="${startDate}"></span>
+								</div>
+								<div class="col-6">
+									<label class="col-form-label">Ngày kết thúc:</label> <span
+										class="form-control" readonly="readonly" th:text="${endDate}"></span>
+								</div>
+							</div>
+
+							<div class="row">
+
+								<div class="col-6">
+									<label class="col-form-label">Trạng thái:</label> <span
+										class="form-control" th:switch="${donation.status}"
+										readonly="readonly"> <span th:case="${'0'}">Mới
+											tạo</span> <span th:case="${'1'}">Đang q.góp</span> <span
+										th:case="${'2'}">Kết thúc q.góp</span> <span th:case="${'3'}">Đóng
+											q.góp</span>
+									</span>
+								</div>
+
+								<div class="col-6">
+									<label for="money" class="col-form-label">Tổng tiền
+										quyên góp:</label> <span class="form-control" id="money"
+										readonly="readonly" th:text="${donated}" /></span>
+								</div>
+
+							</div>
+
+							<div class="row">
+								<div class="col-6">
+									<label class="col-form-label">Tổ chức:</label> <span
+										class="form-control" readonly="readonly"
+										th:text="${donation.organizationName}"></span>
+								</div>
+								<div class="col-6">
+									<label class="col-form-label">Số điện thoại:</label> <span
+										class="form-control" readonly="readonly"
+										th:text="${donation.phoneNumber}"></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<label class="col-form-label">Địa điểm:</label> <span
+										class="form-control" readonly="readonly"
+										th:text="${donation.local}"></span>
+								</div>
+
+								<div class="col-12">
+									<label class="col-form-label">Nội dung:</label>
+									<textarea th:text="${donation.description}"
+										class="form-control" readonly="readonly"></textarea>
+								</div>
+
+							</div>
+						</div>
+						<!--Detail-->
+						<div class="d-flex justify-content-between">
+							<a th:href="@{/admin/donations}">
+								<button type="submit" style="width: 150px; height: 37.5px;"
+									class="btn btn-secondary m-2">Back</button>
+							</a> <a th:href="@{/admin/editDonation/{id}(id=${donation.id})}">
+								<button type="submit" style="width: 150px; height: 37.5px;"
+									class="btn btn-primary m-2">Cập nhật</button>
+							</a>
+						</div>
+
+
+						<div>
+							<h3 class="mt-4">Danh sách nhà hảo tâm</h3>
+							<table>
+								<thead>
+									<tr style="background-color: gray !important;">
+										<th>Họ Tên</th>
+										<th>Tiền quyên góp</th>
+										<th>Nội dung</th>
+										<th>Trạng thái</th>
+									</tr>
+								</thead>
+								<tbody>
+									<th:block th:each="user : ${userDonations}">
+										<tr>
+											<td th:text="${user.name}"></td>
+											<td th:text="${user.money}"></td>
+											<td th:text="${user.text}"></td>
+											<td th:switch="${user.status}"><span th:case="${'0'}">Chờ
+													xác nhận</span> <span th:case="${'1'}">Đã xác nhận</span> <span
+												th:case="${'2'}">Không chấp nhận</span></td>
+										</tr>
+									</th:block>
+								</tbody>
+							</table>
+							<!-- Pagination -->
+				<div class="row pagination-wrap mt-3 my-2">
+					<div th:if="${isEmpty}" class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+					<p class="ml-3">Chưa có nhà hão tâm quyên góp.</p>
+					</div>
+					 
+					<div th:unless="${isEmpty}" class="col-md-6 text-center text-md-right">
+						<div class="custom-pagination ml-auto">
+							<a th:if="${currentPage > 1 }" class="prev"
+								th:href="@{'/admin/detailDonation/'+${donation.id}(pageNo=${currentPage-1})}">Prev</a>
+							<div  class="d-inline-block">
+								
+								
+								<span th:each="i: ${#numbers.sequence(1,totalPages)}"> <a
+									th:if="${i != currentPage}" th:href="@{'/admin/detailDonation/'+${donation.id}(pageNo=${i})}">[[${i}]]</a>
+									<span class="changing" th:if="${i == currentPage}">[[${i}]]</span>
+								</span>
+								
+							</div>
+							<a th:if="${currentPage < totalPages}"
+								th:href="@{'/admin/detailDonation/'+${donation.id}(pageNo = ${userDonations.number + 2})} " class="next">Next</a>
+						</div>				
+					</div>
+				</div>
+				<!-- Pagination -->
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+		<footer class="py-4 bg-light mt-auto">
+			<div class="container-fluid px-4"></div>
+		</footer>
+	</div>
+
+
+
+</body>
+
+</html>

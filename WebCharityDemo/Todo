@@ -1,0 +1,100 @@
+Home : Before login user + admin -> access all
+
+Authority : donation access. 
+
+
+Login : User 	login success -> home
+		Admin 	login success -> home
+
+ROLE Admin : UserController : -> CRUD user entity
+			DonationController -> CRUD donation entity
+			
+			
+FIND user and info  :												---- NOT YET
+fill required in all new form or edit form		
+==================================================		
+				MANAGER USER :
+1.admin/user/users.html -> 
+@GetMapping :
+th:href="@{/admin/detailUser/{id}(id=${user.id})}" : 				---- DONE
+th:href="@{'/admin/editUser/' +${user.id}}" : 						---- DONE
+th:href="@{/admin/deleteUser/{id}(id=${user.id})}" : 				---- DONE
+HttpSession :  														---- DONE
+sessionCheck : 														---- DONE
+Set user id = 1 is Admin. In AppUtil.class							---- DONE
+ 	
+ 	
+2.admin/user/new.html
+@GetMapping :
+th:href=@{/admin/users} 	(back)									---- DONE
+@PostMapping :
+th:action="@{/admin/addNewDonation}" method="post" 					---- DONE
+ 							 
+3.admin/user/detail.html 
+@GetMapping :
+th:href="@{'/admin/editUser/'+${user.id}}" 							---- DONE
+
+4.admin/user/edit.html
+@GetMapping : 
+th:href="@{'/admin/detailUser/' +${user.id}}" (back)				---- DONE
+@PostMapping :
+th:action="@{/admin/updateUser}" method="post" (access)				---- DONE
+
+5.delete user : 			
+pop-up : 															---- DONE
+@GetMapping : 
+/deleteUser/{id}"													---- DONE
+
+===================================================================================================
+						MANAGER DONATION :
+1.admin/donation/donations.html
+th:action="@{/admin/addNewDonation}" method="post"	
+th:href="@{/admin/detailDonation/{id}(id=${donation.id})}"			---- DONE
+th:href="@{'/admin/editDonation/' +${donation.id}}"					---- DONE
+th:href="@{'/admin/deleteDonation/' + ${donation.id}}"				---- DONE
+
+2.admin/donation/new.html
+@GetMapping : 
+th:href="@{/admin/donations}" (back)								---- DONE
+@PostMapping :
+th:action="@{/admin/addNewDonation}" method="post"					---- DONE
+
+3.admin/donation/detail.html
+@GetMapping :
+th:href="@{/admin/donations}">	(back)								---- DONE
+th:href="@{/admin/editDonation/{id}(id=${donation.id})}"			---- DONE
+
+
+4.admin/donation/edit.html
+th:href="@{/admin/donations}">	(back)	
+th:action="@{updateDonated}" method ="post"							---- DONE
+th:action="@{deniedDonated}" method ="post" (change status in DB)	---- DONE
+											(NO DELETE IN DB)
+th:action="@{/changeStatus}" method ="post"	(donation entity)		---- DONE
+th:action="@{/admin/deleteUserDonation}" method="post" 				---- DONE
+											(DELETE IN DB)			
+
+5.delete donation :
+pop-up : 															---- DONE
+@GetMapping : 
+/deleteUser/{id}"													---- DONE
+
+
+
+
+===================================================================================================
+						USER FUNCTION :
+ROLE User : UserInfoController : -> Read only : user entity
+1.public/home.html
+@GetMapping :
+th:href="@{/user/info/+${id}}"										---- DONE
+@PostMapping :
+th:action="@{/saveNewUserDonation}" method="post"					---- DONE
+
+
+2.public/detail (donation detail)
+
+3.admin/user/detail.html											---- DONE
+display : 
+-field role.														---- DONE
+-button edit 					  									---- DONE

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>[[${pageTitle}]]</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+	rel="stylesheet" />
+<!--Tạo evenClick vào 3 cái nút ẩn hiện nav-->
+<script th:src="@{/admin1/assets/js/scripts.js}"></script>
+<!--Cái nút 3 gạch ẩn hiện-->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+	crossorigin="anonymous"></script>
+<!--Cái khung nav-->
+<link th:href="@{/admin1/assets/css/styles.css}" rel="stylesheet" />
+<link th:href="@{/user/assets/css/custom-bs.css}" rel="stylesheet">
+<link th:href="@{/user/assets/css/style.css}" rel="stylesheet">
+<!--End New-->
+</head>
+
+<body class="sb-nav-fixed">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<nav th:fragment="html_nav"
+			class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+			<!-- Navbar Brand-->
+			<a class="navbar-brand ps-3" th:href="@{/admin/home}">QUẢN TRỊ</a>
+			<!-- Sidebar Toggle-->
+			<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+				id="sidebarToggle" href="#!">
+				<i class="fas fa-bars"></i>
+			</button>
+			<!-- Navbar Search-->
+			<form
+				class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+
+			</form>
+			<!-- Navbar-->
+			<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+				<li class="nav-item dropdown"><a th:if="${session}"
+					class="nav-link dropdown-toggle" th:href="@{/logout}" role="button"><i
+						class="fas fa-user fa-fw"></i><span> Logout</span></a>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="navbarDropdown1">
+						<li><a class="dropdown-item" href="#">Settings</a></li>
+						<li><a class="dropdown-item" href="#">Activity Log</a></li>
+						<li>
+							<hr class="dropdown-divider" />
+						</li>
+						<li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+					</ul></li>
+			</ul>
+		</nav>
+	</nav>
+
+	<div id="layoutSidenav">
+		<!--Cái Nav-->
+		<div id="layoutSidenav_nav">
+			<div th:fragment="html_menu" id="layoutSidenav_nav">
+				<nav class="sb-sidenav accordion sb-sidenav-dark"
+					id="sidenavAccordion">
+					<div th:if="${session.admin}" class="sb-sidenav-menu">
+						<div class="nav">
+							<a class="nav-link" th:href="@{/admin/users}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý người dùng
+							</a> <a class="nav-link" th:href="@{/admin/donations}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý đợt quyên góp
+							</a>
+						</div>
+					</div>
+					<div th:unless="${session.admin}" class="sb-sidenav-menu">
+						<div class="nav">
+							<a class="nav-link" th:href="@{/home}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> HOME
+							</a>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		<div id="layoutSidenav_content">
+			<main>
+				<form th:action="@{/admin/updateUser}" method="post"
+					th:object="${user}">
+					<input type="hidden" th:field="*{id}" th:value="${user.id}"
+						name="id"> <input type="hidden" name="created"
+						th:field="*{created}" th:value="${user.created}"> <input
+						type="hidden" name="usersDonation" th:field="*{usersDonation}"
+						th:value="${user.usersDonation}">
+
+
+					<div class="container-fluid px-4">
+						<div class="card mb-4">
+							<div class="card-header">
+								<h3 th:text="${pageTitle}"></h3>
+								<h3 th:text="${message}"></h3>
+							</div>
+
+							<div class="card-body ">
+								<div class="form-group row mb-4 mb-4">
+									<label class="col-sm-4 col-form-label">Tên:</label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" th:field="*{fullName}"
+											placeholder="Full Name" />
+										<div th:if="${#fields.hasErrors('fullName')}"
+											class="alert alert-warning" th:errors="*{fullName}"></div>
+									</div>
+								</div>
+								<div class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">E-mail:</label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" th:field="*{email}"
+											readonly="readonly" placeholder="example@gamil.com" />
+										<div class="alert alert-warning"
+											th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+										</div>
+									</div>
+								</div>
+								<div class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Số điện Thoại:</label>
+									<div class="col-sm-8">
+										<input class="form-control" type="number"
+											th:field="*{phoneNumber}" placeholder="Phone number" />
+										<div th:if="${#fields.hasErrors('phoneNumber')}"
+											class="alert alert-warning" th:errors="*{phoneNumber}"></div>
+									</div>
+								</div>
+								<div class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Địa chỉ:</label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" th:field="*{address}"
+											placeholder="Địa chỉ" />
+										<div th:if="${#fields.hasErrors('address')}"
+											class="alert alert-warning" th:errors="*{address}"></div>
+									</div>
+								</div>
+								<div class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">User-Name:</label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" th:field="*{userName}"
+											readonly="readonly" placeholder="Từ 6 đến 20 ký tự" />
+										<div th:if="${#fields.hasErrors('userName')}"
+											class="alert alert-warning" th:errors="*{userName}"></div>
+									</div>
+								</div>
+								<div th:if="${session.user}" class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Mật Khẩu:</label>
+									<div class="col-sm-8">
+										<input class="form-control" type="text" th:field="*{password}"
+											placeholder="Ít nhất 4 ký tự" />
+										<div th:if="${#fields.hasErrors('password')}"
+											class="alert alert-warning" th:errors="*{password}"></div>
+									</div>
+								</div>
+
+
+								<div th:if="${session.admin}" class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Mật Khẩu :</label>
+									<div class="col-sm-8">
+										<input type="hidden" th:field="*{password}"
+											th:value="${user.password}" /> <input class="form-control"
+											th:value="${user.password}" readonly="readonly">
+									</div>
+								</div>
+
+
+								<div th:if="${session.admin}" class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Vai Trò:</label>
+									<div class="col-sm-8">
+										<select th:field="*{role}" class="form-control">
+											<option value="">--Vai Trò--</option>
+											<option value="1">Admin</option>
+											<option value="2">User</option>
+										</select>
+										<div th:if="${#fields.hasErrors('role')}"
+											class="alert alert-warning" th:errors="*{role}"></div>
+									</div>
+								</div>
+
+								<div th:if="${session.user}" class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Vai Trò:</label>
+									<div class="col-sm-8">
+										<input type="hidden" th:field="*{role}"
+											th:value="${user.role}" /> <input class="form-control"
+											value="USER" readonly="readonly">
+									</div>
+
+								</div>
+
+								<div th:if="${session.admin}" class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Trạng thái hoạt
+										động:</label>
+									<div class="col-sm-8">
+										<select th:field="*{status}" class="form-control">
+											<option value="1">Hoạt động</option>
+											<option value="0">Khóa</option>
+										</select>
+										<div th:if="${#fields.hasErrors('status')}"
+											class="alert alert-warning" th:errors="*{status}"></div>
+									</div>
+								</div>
+
+								<div th:if="${session.user}" class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Trạng thái hoạt
+										động:</label>
+									<div class="col-sm-8">
+										<input type="hidden" th:field="*{status}"
+											th:value="${user.status}" /> <span class="form-control"
+											th:switch="${user.status}" readonly="readonly"> <span
+											th:case="${1}">HOẠT ĐÔNG</span> <span th:case="${0}">BỊ
+												KHÓA</span>
+										</span>
+									</div>
+								</div>
+
+
+
+								<div class="form-group row mb-4">
+									<label class="col-sm-4 col-form-label">Ghi Chú:</label>
+									<div class="col-sm-8">
+										<input type="text" th:field="*{note}" class="form-control"
+											style="height: 100px;" size="1000" />
+									</div>
+								</div>
+
+								<!--3 cái nút cuối trang-->
+								<div class="d-flex justify-content-between align-items-center">
+									<a th:if="${session.admin}"
+										th:href="@{'/admin/detailUser/' +${user.id}}"><button
+											type="button" style="width: 80px"
+											class="btn btn-secondary m-2">Cancel</button></a> <a
+										th:if="${session.user}" th:href="@{'/user/info/' +${user.id}}"><button
+											type="button" style="width: 80px"
+											class="btn btn-secondary m-2">Cancel</button></a>
+									<div>
+										<input type="submit"
+											style="width: 80px; height: 37px; background-color: dodgerblue;"
+											class="btn btn-primary m-2 " value="Lưu">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</main>
+
+
+
+		</div>
+	</div>
+
+
+
+</body>
+
+</html>

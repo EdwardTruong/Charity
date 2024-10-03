@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Srping MVC thymeleaf" />
+<meta name="author" content="truongFunix20125" />
+<title>DONATIONS</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+	rel="stylesheet" />
+<link th:href="@{/admin1/assets/css/styles.css}" rel="stylesheet" />
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	crossorigin="anonymous"></script>
+<script th:src="@{/admin1/assets/js/scripts.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
+	crossorigin="anonymous"></script>
+<script th:src="@{/admin1/assets/js/datatables-simple-demo.js}"></script>
+<script src="js/JQuery3.3.1.js"></script>
+<script src="js/scripts.js"></script>
+<script src="js/datatables-simple-demo.js"></script>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+
+<!-- New -->
+<link rel="stylesheet" th:href="@{/user/assets/css/custom-bs.css}">
+<link rel="stylesheet" th:href="@{/user/assets/css/style.css}">
+<!--End new-->
+<body class="sb-nav-fixed">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<nav th:fragment="html_nav"
+			class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+			<!-- Navbar Brand-->
+			<a class="navbar-brand ps-3" th:href="@{/admin/home}">QUẢN TRỊ</a>
+			<!-- Sidebar Toggle-->
+			<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+				id="sidebarToggle" href="#!">
+				<i class="fas fa-bars"></i>
+			</button>
+			<!-- Navbar Search-->
+			<form
+				class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+			</form>
+			<!-- Navbar-->
+			<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+				<li class="nav-item dropdown"><a th:if="${session.admin}"
+					class="nav-link dropdown-toggle" th:href="@{/logout}" role="button"><i
+						class="fas fa-user fa-fw"></i><span> Logout</span></a>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="navbarDropdown1">
+						<li><a class="dropdown-item" href="#">Settings</a></li>
+						<li><a class="dropdown-item" href="#">Activity Log</a></li>
+						<li>
+							<hr class="dropdown-divider" />
+						</li>
+						<li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+					</ul></li>
+			</ul>
+		</nav>
+	</nav>
+
+	<div id="layoutSidenav">
+		<!--Nav-->
+		<div id="layoutSidenav_nav">
+			<div th:fragment="html_menu" id="layoutSidenav_nav">
+				<nav class="sb-sidenav accordion sb-sidenav-dark"
+					id="sidenavAccordion">
+					<div class="sb-sidenav-menu">
+						<div class="nav">
+							<a class="nav-link" th:href="@{/admin/users}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý người dùng
+							</a> <a class="nav-link" th:href="@{/admin/donations}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý đợt quyên góp
+							</a>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		<div id="layoutSidenav_content">
+			<main>
+				<div class="container-fluid px-4">
+					<h1 class="mt-4">Danh sách các đợt quyên góp</h1>
+					<div class="card mb-4">
+						<div class="card-header">
+							<div th:if="${message}" class="alert alert-success text-center">
+								[[${message}]]</div>
+							<div th:if="${error}" class="alert alert-warning text-center">
+								[[${error}]]</div>
+							<div class="d-flex justify-content-between">
+								<!--Create new donation-->
+
+								<div th:if="${max == true}">
+									<p class="ml-4">Tối đa là 10 đối tượng. Hãy xóa bớt để có
+										thể thêm mới. Yêu cầu của bài !</p>
+								</div>
+
+								<div th:if="${max == false}">
+									<button type="button" class="btn btn-success"
+										data-bs-target="#exampleModalAdd" data-bs-toggle="modal">Thêm
+										mới</button>
+								</div>
+
+								<!-- Modal Add-->
+								<div class="modal fade" id="exampleModalAdd" tabindex="-1"
+									aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog modal-lg">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabelll">Thêm
+													mới</h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<form th:action="@{/admin/addNewDonation}" method="post"
+													enctype="multipart/form-data" th:object="${newDonation}">
+													<div class="row">
+														<div class="col-6">
+															<label class="col-form-label">Mã đợt quyên góp:</label> <input
+																type="text" class="form-control" th:field="*{code}">
+														</div>
+														<div class="col-6">
+															<label class="col-form-label">Tên đợt quyên góp:</label>
+															<input type="text" class="form-control" id="addcost"
+																th:field="*{name}">
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-6">
+															<label class="col-form-label">Ngày bắt đầu:</label> <input
+																type="date" class="form-control" th:field="*{startDate}">
+															<div th:if="${#fields.hasErrors('startDate')}"
+																th:errors="*{startDate}" class="alert alert-warning"></div>
+														</div>
+														<div class="col-6">
+															<label class="col-form-label">Ngày kết thúc:</label> <input
+																type="date" class="form-control" th:field="*{endDate}">
+															<div th:if="${#fields.hasErrors('endDate')}"
+																th:errors="*{endDate}" class="alert alert-warning">
+															</div>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-6">
+															<label class="col-form-label">Tổ chức:</label> <input
+																type="text" class="form-control"
+																th:field="*{organizationName}">
+														</div>
+														<div class="col-6">
+															<label class="col-form-label">Số điện thoại:</label> <input
+																type="number" class="form-control"
+																th:field="*{phoneNumber}">
+														</div>
+														<div class="col-12">
+															<label class="col-form-label">Nội dung:</label>
+															<textarea th:field="*{description}" class="form-control"
+																cols="50" rows="5">Nhập nội dung</textarea>
+														</div>
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">Đóng</button>
+														<button type="submit" class="btn btn-primary">Thêm
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Modal Add-->
+
+
+
+								<!--input find donation-->
+								<form>
+									<div class="input-group input-group-sm mr-3"
+										style="width: 500px;">
+										<!--<label>Tìm tên mã quyên góp : </label>-->
+										<input type="text" name="input" th:value="${input}"
+											placeholder="Mã - SĐT - Tổ Chức - Trạng thái"
+											class="form-control float-right" />
+										<div class="input-group-append">
+											<button type="submit" class="btn btn-default">
+												<i class="fas fa-search"></i>
+											</button>
+										</div>
+									</div>
+								</form>
+							</div>
+							<!-- Modal Add-->
+							<div class="card-body" style="width: auto">
+								<table>
+									<thead>
+										<tr style="background-color: gray !important;">
+											<th>Mã</th>
+											<th>Tên</th>
+											<th>Ngày bắt đầu</th>
+											<th>Ngày kết thúc</th>
+											<th>Tổ chức</th>
+											<th>Số điện thoại</th>
+											<th>Tổng tiền</th>
+											<th>Trạng thái</th>
+											<th style="width: 220px">Hành động</th>
+										</tr>
+									</thead>
+
+									<tbody>
+										<th:block th:if="${empty}">
+											<td th:text="${empty}"></td>
+										</th:block>
+
+										<th:block th:each="donation : ${donations}">
+											<tr>
+												<td th:text="${donation.code}"></td>
+												<td th:text="${donation.name}"></td>
+												<td th:text="${donation.startDate}"></td>
+												<td th:text="${donation.endDate}"></td>
+												<td th:text="${donation.organizationName}"></td>
+												<td th:text="${donation.phoneNumber}"></td>
+												<td th:text="${donation.money}"></td>
+												<td th:switch="${donation.status}"><span
+													th:case="${'0'}">Mới tạo</span> <span th:case="${'1'}">Đang
+														q.góp</span> <span th:case="${'2'}">Kết thúc q.góp</span> <span
+													th:case="${'3'}">Đóng q.góp</span></td>
+												<td>
+													<div class="d-flex">
+														<a
+															th:href="@{/admin/detailDonation/{id}(id=${donation.id})}">
+															<button type="button" style="width: 80px"
+																class="btn btn-success mr-3" data-bs-toggle="modal">Chi
+																tiết</button>
+														</a> <a th:href="@{'/admin/editDonation/' +${donation.id}}">
+															<button type="button" style="width: 100px"
+																class="btn btn-success mx-3" data-bs-toggle="modal">Cập
+																nhật</button>
+														</a>
+														<!--Delete-->
+														<button type="button" class="btn btn-danger"
+															th:attr="data-bs-target='#exampleModalDelete'+${donation.id}"
+															data-bs-toggle="modal">Xóa</button>
+
+
+													</div> <!-- Modal appear -->
+													<div class="modal fade overlay"
+														th:id="'exampleModalDelete'+${donation.id}" tabindex="-1"
+														aria-labelledby="exampleModalLabel" aria-hidden="true">
+														<div class="modal-dialog modal-lg">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="exampleModalLabel">
+																		Xóa tất cả mọi thứ về đợt quyên góp ?</h5>
+
+																	<button type="button" class="btn-close"
+																		data-bs-dismiss="modal" aria-label="Close"></button>
+																</div>
+																<div class="modal-body">
+																	<div class="d-flex">
+																		<label>Tên đợt quyên góp :</label> <span
+																			th:text="${donation.name}"></span>
+																	</div>
+																	<br>
+																	<div class="d-flex">
+																		<label>Số tiền đã quyên góp được : </label> <span
+																			th:text="${donation.money}"></span>
+																	</div>
+																	<br>
+																</div>
+
+																<div class="d-flex justify-content-center mb-3 ">
+																	<button type="button" class="btn btn-secondary"
+																		data-bs-dismiss="modal">Hủy</button>
+																	<a
+																		th:href="@{'/admin/deleteDonation/' + ${donation.id}}"><button
+																			class="btn btn-danger ml-3" style="width: 80px">Xóa</button></a>
+																</div>
+															</div>
+														</div>
+													</div> <!-- Modal appear-->
+												</td>
+											</tr>
+										</th:block>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+				<!-- Pagination -->
+				<div th:if="${page}" class="row pagination-wrap">
+					<div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+						<div
+							th:text="${firstObjectOnPage}+ ' to ' + ${lastObjectOnPage} + ' of ' +${all} "></div>
+					</div>
+
+					<div th:if="${all != 0}" class="row pagination-wrap">
+						<div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+						</div>
+
+						<div class="col-md-6 text-center text-md-right">
+							<div class="custom-pagination ml-auto">
+								<a th:if="${currentDonationPage > 1 }"
+									th:href="@{'/admin/pageDonation/' + ${currentDonationPage-1}}"
+									class="prev">Prev</a>
+
+								<div class="d-inline-block">
+									<span th:each="i: ${#numbers.sequence(1,totalDonationPages)}">
+										<span th:if="${i == currentDonationPage}" class="changing">[[${i}]]</span>
+
+										<span th:if="${donations != null}"> <a
+											th:if="${i != currentDonationPage && totalDonationOnAPage != 0 && input != null}"
+											th:href="@{'/admin/pageDonation/' + ${i} + '?input='+ ${input}}">[[${i}]]</a>
+											<a
+											th:if="${i != currentDonationPage && totalDonationOnAPage != 0 && input == null}"
+											th:href="@{'/admin/pageDonation/' + ${i}}">[[${i}]]</a>
+									</span>
+									</span>
+								</div>
+
+								<a th:if="${currentDonationPage < totalDonationPages}"
+									th:href="@{'/admin/pageDonation/' + ${currentDonationPage+1}}"
+									class="next">Next</a>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</main>
+		</div>
+	</div>
+</body>
+
+</html>

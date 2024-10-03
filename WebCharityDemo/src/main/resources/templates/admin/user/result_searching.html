@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="Srping MVC thymeleaf" />
+<meta name="author" content="truongFunix20125" />
+<title>USES</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+	rel="stylesheet" />
+<link th:href="@{/admin1/assets/css/styles.css}" rel="stylesheet" />
+<link th:href="@{/user/assets/css/custom-bs.css}" rel="stylesheet">
+<link th:href="@{/user/assets/css/style.css}" rel="stylesheet">
+
+<script th:src="@{/admin1/assets/js/scripts.js}"></script>
+<script th:src="@{/admin1/assets/js/datatables-simple-demo.js}"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	crossorigin="anonymous"></script>
+
+
+
+<!--Nút bấm mở table nhỏ-->
+<script th:src="@{/user/assets/js/jquery.min.js}"></script>
+<script th:src="@{/user/assets/js/bootstrap.bundle.min.js}"></script>
+<!--Nút bấm mở table nhỏ-->
+
+
+
+
+</head>
+
+<body class="sb-nav-fixed">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<nav th:fragment="html_nav"
+			class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+			<!-- Navbar Brand-->
+			<a class="navbar-brand ps-3" th:href="@{/admin/home}">QUẢN TRỊ</a>
+			<!-- Sidebar Toggle-->
+			<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+				id="sidebarToggle" href="#!">
+				<i class="fas fa-bars"></i>
+			</button>
+			<!-- Navbar Search-->
+			<form
+				class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+			</form>
+			<!-- Navbar-->
+			<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+				<li class="nav-item dropdown"><a th:if="${session.admin}"
+					class="nav-link dropdown-toggle" th:href="@{/logout}" role="button"><i
+						class="fas fa-user fa-fw"></i><span> Logout</span></a>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="navbarDropdown1">
+						<li><a class="dropdown-item" href="#">Settings</a></li>
+						<li><a class="dropdown-item" href="#">Activity Log</a></li>
+						<li>
+							<hr class="dropdown-divider" />
+						</li>
+						<li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>
+					</ul></li>
+			</ul>
+		</nav>
+	</nav>
+
+	<div id="layoutSidenav">
+		<!--Cái Nav-->
+		<div id="layoutSidenav_nav">
+			<div th:fragment="html_menu" id="layoutSidenav_nav">
+				<nav class="sb-sidenav accordion sb-sidenav-dark"
+					id="sidenavAccordion">
+					<div class="sb-sidenav-menu">
+						<div class="nav">
+							<a class="nav-link" th:href="@{/admin/users}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý người dùng
+							</a> <a class="nav-link" th:href="@{/admin/donations}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý đợt quyên góp
+							</a>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		<div id="layoutSidenav_content">
+			<main>
+				<div class="container-fluid px-4">
+					<h1 class="mt-4">Danh sách người dùng</h1>
+					<div class="card mb-4">
+						<div class="card-header">
+							<div th:if="${success}" class="alert alert-success text-center">
+								[[${success}]]</div>
+							<div th:if="${error}" class="alert alert-warning text-center">
+								[[${error}]]</div>
+							<div class="d-flex justify-content-between">
+								<div th:if="${max == true}">
+									<p class="ml-4">Tối đa là 10 đối tượng. Hãy xóa bớt để có
+										thể thêm mới. Yêu cầu của bài !</p>
+								</div>
+
+								<div th:if="${max == false}">
+									<button type="button" class="btn btn-success"
+										data-bs-toggle="modal" data-bs-target="#exampleModalAdd">Thêm
+										mới</button>
+								</div>
+
+								<form>
+									<div class="input-group input-group-sm mr-3"
+										style="width: 300px;">
+										<input type="text" name="input" th:value="${input}"
+											class="form-control float-right"
+											placeholder="Search Email - SĐT" />
+										<div class="input-group-append">
+											<button type="submit" class="btn btn-default">
+												<i class="fas fa-search"></i>
+											</button>
+										</div>
+
+									</div>
+								</form>
+							</div>
+							<!-- Modal Add-->
+							<div class="card-body" style="width: auto;">
+								<!--  id="datatablesSimple"  Cái nút lên xuống của từng cột trong bài mẫu boottrap 5 https://datatables.net/-->
+								<table id="table">
+									<thead>
+										<tr style="background-color: gray !important;">
+											<th>Họ tên</th>
+											<th>Email</th>
+											<th>Số điện thoại</th>
+											<th>Tên tài khoản</th>
+											<th>Vai trò</th>
+											<th>Trạng thái</th>
+											<th class="ml-5">Hành động</th>
+										</tr>
+									</thead>
+									<tbody>
+										<th:block th:if="${empty}">
+											<td th:text="${empty}"></td>
+										</th:block>
+										<th:block th:each="user : ${users}">
+											<tr>
+												<td th:text="${user.fullName}"></td>
+												<td th:text="${user.email}"></td>
+												<td th:text="${user.phoneNumber}"></td>
+												<td th:text="${user.userName}"></td>
+												<td th:switch="${user.roleId}"><span th:case="1">ADMIN</span>
+													<span th:case="2">USER</span></td>
+												<td th:switch="${user.status}"><span th:case="${'0'}">Khóa</span>
+													<span th:case="${'1'}">Hoạt động</span></td>
+												<td style="width: 370px;">
+													<div class="d-flex">
+														<a th:href="@{/admin/detailUser/{id}(id=${user.id})}">
+															<button type="button" style="width: 80px"
+																class="btn btn-success mr-3" data-bs-toggle="modal">Chi
+																tiết</button>
+														</a> <a th:href="@{'/admin/editUser/' +${user.id}}">
+															<button type="button" style="width: 80px"
+																class="btn btn-success mx-3" data-bs-toggle="modal">Sữa
+															</button>
+														</a>
+													</div>
+
+
+													<div class="d-flex">
+														<form th:if="${user.roleId != 1}"
+															th:action="@{/admin/changeStatutToLock/{id}(id=${user.id})}"
+															method="POST" th:object="${user}">
+															<button th:if="${user.status== 0}" type="submit"
+																class="btn btn-success mt-2 mr-3 ">Mở Khoá</button>
+															<button th:if="${user.status == 1}"
+																style="width: 80px; height: 37, 5px" type="submit"
+																class="btn btn-danger mt-2 mr-3">Khóa</button>
+														</form>
+
+														<button data-toggle="modal" th:if="${user.roleId != 1}"
+															type="button" class="btn btn-danger mx-3 mt-2"
+															th:attr="data-target='#aModel'+${user.id}"
+															style="width: 80px; height: 37, 5px">Xóa</button>
+													</div>
+													<div class="modal fade" th:id="'aModel' + ${user.id}"
+														tabindex="-1" role="dialog"
+														aria-labelledby="exampleModalLabel" aria-hidden="true">
+														<div class="modal-dialog modal-lg">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="modalLabelDelete">Bạn
+																		muốn xóa người dùng</h5>
+																	<button type="button" class="close"
+																		data-dismiss="modal" aria-label="Close">
+																		<span aria-hidden="true">&times;</span>
+																	</button>
+																</div>
+																<div class="modal-body">
+																	<label class="col-sm-4 col-form-label">Tên
+																		người dùng:</label> <span th:text="${user.fullName}"></span><br>
+																	<label class="col-sm-4 col-form-label">Id: </label> <label
+																		th:text="${user.id}"> </label>
+																</div>
+																<div class="modal-footer mb-3 ">
+																	<button class="btn btn-secondary mr-3"
+																		style="width: 80px">Đóng</button>
+																	<a th:href="@{/admin/deleteUser/{id}(id=${user.id})}"><button
+																			class="btn btn-danger ml-3">Xóa người dùng</button></a>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</td>
+											</tr>
+										</th:block>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Pagination -->
+				<div th:if="${page}" class="row pagination-wrap">
+					<div class="col-md-6 text-center text-md-left mb-4 mb-md-0">
+						<div
+							th:text="${firstObjectOnPage}+ ' to ' + ${lastObjectOnPage} + ' of ' +${all} "></div>
+					</div>
+					<div th:if="${all != 0}" class="col-md-6 text-center text-md-right">
+						<div class="custom-pagination ml-auto">
+							<div>
+
+								<a th:if="${currentUserPage > 1 }"
+									th:href="@{'?pageUserNumber='+${currentUserPage-1}}"
+									class="prev">Prev</a>
+								<div class="d-inline-block">
+									<span th:each="i: ${#numbers.sequence(1,totalPages)}"> <span
+										th:if="${i == currentUserPage}" class="changing">[[${i}]]</span>
+
+										<span th:if="${users != null}"> <a
+											th:if="${i != currentUserPage && totalUserOnAPage != 0 && input != null}"
+											th:href="@{'/admin/pageUser/' + ${i} + '?input='+ ${input}}">[[${i}]]</a>
+
+											<a th:if="${i != currentUserPage && input == null}"
+											th:href="@{'/admin/pageUser/' + ${i}}">[[${i}]]</a>
+									</span>
+									</span>
+								</div>
+								<a th:if="${currentUserPage < totalPages}"
+									th:href="@{'?pageUserNumber='+${currentUserPage+1}}"
+									class="next">Next</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" id="exampleModalAdd" tabindex="-1"
+					aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-lg">
+						<div class="card mb-4">
+							<div class="card-header">
+								<h1 class="my-3">Thêm người dùng mới</h1>
+							</div>
+							<div class="card-body" style="width: auto;">
+								<div class="modal-content">
+									<form th:action="@{/admin/processAddNewUser}" method="post"
+										th:object="${newUser}">
+										<div class="row">
+											<div class="col-6">
+												<label class="col-form-label ml-2">Họ và Tên:</label>
+												<div>
+													<input type="text" th:field="*{fullName}"
+														class="form-control ml-2" style="width: 95%;"
+														placeholder="Full name">
+													<div th:if="${#fields.hasErrors('fullName')}"
+														th:errors="*{fullName}" class="alert alert-warning"></div>
+												</div>
+											</div>
+											<div class="col-6">
+												<label class="col-form-label ml-2">Email:</label>
+												<div>
+													<input type="email" th:field="*{email}"
+														class="form-control " style="width: 95%;"
+														placeholder="example@gmail.com">
+													<div th:if="${#fields.hasErrors('email')}"
+														th:errors="*{email}"></div>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-6">
+												<label class="col-form-label ml-2">Số điện thoại:</label>
+												<div>
+													<input type="number" style="width: 95%;"
+														class="form-control ml-2" th:field="*{phoneNumber}"
+														id="phoneNumber" placeholder="--- --- ----" />
+													<div th:if="${#fields.hasErrors('phoneNumber')}"
+														class="alert alert-warning" th:errors="*{phoneNumber}"></div>
+												</div>
+											</div>
+											<div class="col-6">
+												<label class="col-form-label ml-2">Địa chỉ:</label>
+												<div>
+													<input type="text" style="width: 95%;"
+														th:field="*{address}" class="form-control" id="address"
+														placeholder="Địa chỉ" />
+													<div th:if="${#fields.hasErrors('address')}"
+														th:errors="*{address}" class="alert alert-warning"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-6">
+												<label class="col-form-label ml-2">Tên tài khoản:</label>
+												<div>
+													<input type="text" style="width: 95%;"
+														th:field="*{userName}" class="form-control ml-2"
+														placeholder="Từ 6 đến 20 ký tự" />
+													<div th:if="${#fields.hasErrors('userName')}"
+														th:errors="*{userName}" class="alert alert-warning"></div>
+												</div>
+											</div>
+											<div class="col-6">
+												<label class="col-form-label ml-2">Mật khẩu:</label>
+												<div>
+													<input class="form-control" style="width: 95%;" type="text"
+														th:field="*{password}" placeholder="xxxxxx">
+													<div th:if="${#fields.hasErrors('password')}"
+														th:errors="*{password}" class="alert alert-warning">
+													</div>
+												</div>
+											</div>
+											<div class="col-6">
+												<label class="col-form-label ml-2">Vai trò:</label>
+												<div>
+													<select th:field="*{role}" style="width: 95%;"
+														class="form-control ml-2 mb-4">
+														<option value="">--Vai Trò--</option>
+														<option value="1">Admin</option>
+														<option value="2">User</option>
+													</select>
+													<div th:if="${#fields.hasErrors('role')}"
+														class="alert alert-warning" th:errors="*{role}"></div>
+												</div>
+											</div>
+										</div>
+
+										<div class="modal-footer d-flex justify-content-between">
+											<button type="button" data-bs-dismiss="modal"
+												class="btn btn-secondary">Đóng</button>
+											<input type="submit" class="btn btn-primary" value="Thêm"></input>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<script src="js/JQuery3.3.1.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		crossorigin="anonymous"></script>
+	<script src="js/scripts.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
+		crossorigin="anonymous"></script>
+	<script src="js/datatables-simple-demo.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<meta name="description" content="" />
+<meta name="author" content="" />
+<title>NEW DONATION</title>
+<link th:href="@{/admin1/assets/css/styles.css}" rel="stylesheet" />
+<link rel="stylesheet" th:href="@{/user/assets/css/custom-bs.css}">
+<link rel="stylesheet" th:href="@{/user/assets/css/style.css}">
+<link
+	href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"
+	rel="stylesheet" />
+
+<script th:src="@{/admin1/assets/js/datatables-simple-demo.js}"></script>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest"
+	crossorigin="anonymous"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"
+	crossorigin="anonymous"></script>
+
+<script th:src="@{/admin1/assets/js/scripts.js}"></script>
+<!--Nút bấm mở table nhỏ-->
+<script th:src="@{/user/assets/js/jquery.min.js}"></script>
+<script th:src="@{/user/assets/js/bootstrap.bundle.min.js}"></script>
+<!--Nút bấm mở table nhỏ-->
+<script th:src="@{/user/assets/js/isotope.pkgd.min.js}"></script>
+<script th:src="@{/user/assets/js/stickyfill.min.js}"></script>
+<script th:src="@{/user/assets/js/jquery.fancybox.min.js}"></script>
+<script th:src="@{/user/assets/js/jquery.easing.1.3.js}"></script>
+<script th:src="@{/user/assets/js/jquery.waypoints.min.js}"></script>
+<script th:src="@{/user/assets/js/jquery.animateNumber.min.js}"></script>
+<script th:src="@{/user/assets/js/owl.carousel.min.js}"></script>
+<script th:src="@{/user/assets/js/bootstrap-select.min.js}"></script>
+<script th:src="@{/user/assets/js/custom.js}"></script>
+<script th:src="@{/user/assets/js/newJs.js}"></script>
+<script src="js/datatables-simple-demo.js"></script>
+<script src="js/JQuery3.3.1.js"></script>
+<script src="js/scripts.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+	crossorigin="anonymous"></script>
+
+
+
+<!--End NEW -->
+</head>
+
+<body class="sb-nav-fixed">
+	<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+		<nav th:fragment="html_nav"
+			class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+			<!-- Navbar Brand-->
+			<a class="navbar-brand ps-3" th:href="@{/admin/home}">QUẢN TRỊ</a>
+			<!-- Sidebar Toggle-->
+			<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0"
+				id="sidebarToggle" href="#!">
+				<i class="fas fa-bars"></i>
+			</button>
+			<!-- Navbar Search-->
+			<form
+				class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+
+			</form>
+			<!-- Navbar-->
+			<ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+				<li class="nav-item dropdown"><a th:if="${session.admin}"
+					class="nav-link dropdown-toggle" th:href="@{/user/logout}"
+					role="button"><i class="fas fa-user fa-fw"></i><span>
+							Logout</span></a>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="navbarDropdown1">
+						<li><a class="dropdown-item" href="#">Settings</a></li>
+						<li><a class="dropdown-item" href="#">Activity Log</a></li>
+						<li>
+							<hr class="dropdown-divider" />
+						</li>
+						<li><a class="dropdown-item" th:href="@{/user/logout}">Logout</a></li>
+					</ul></li>
+			</ul>
+		</nav>
+	</nav>
+
+	<div id="layoutSidenav">
+		<!--Nav-->
+		<div id="layoutSidenav_nav">
+			<div th:fragment="html_menu" id="layoutSidenav_nav">
+				<nav class="sb-sidenav accordion sb-sidenav-dark"
+					id="sidenavAccordion">
+					<div class="sb-sidenav-menu">
+						<div class="nav">
+							<a class="nav-link" th:href="@{/admin/users}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý người dùng
+							</a> <a class="nav-link" th:href="@{/admin/donations}"> <i
+								class="sb-nav-link-icon"> <i class="fas fa-tachometer-alt"></i>
+							</i> Quản lý đợt quyên góp
+							</a>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+
+		<div id="layoutSidenav_content">
+			<div>
+				<main>
+					<form th:action="@{/admin/addNewDonation}" method="post" th:object="${newDonation}"> 
+						<div class="container-fluid px-4">
+							<div class="card mb-4">
+								<div class="card-header">
+									<h5 class="mt-4">Thêm mới đợt quyên góp.</h5>
+								</div>
+								<div class="card-body">
+								<div th:if="${error}" class="alert alert-warning text-center">[[${error}]]</div>	
+								<div th:if="${max}" class="alert alert-warning text-center">[[${max}]]</div>
+									<div class="row">
+										<div class="col-6">
+											<label for="code" class="col-fo rm-label">Mã đợt
+												quyên góp:</label> <input id="code" type="text" class="form-control"
+												th:field="*{code}" />
+											<div th:if="${#fields.hasErrors('code')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{code}"></div>
+										</div>
+										<div class="col-6">
+											<label for="name" class="col-fo rm-label">Tên đợt
+												quyên góp:</label> <input id="name" type="text" class="form-control"
+												th:field="*{name} " />
+											<div th:if="${#fields.hasErrors('name')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{name}"></div>
+										</div>
+									</div>
+
+							
+									<div class="row">
+										<div class="col-6">
+											<label class="col-form-label">Ngày bắt đầu:</label> <input
+												type="date" class="form-control" th:field="*{startDate} " />
+											<div th:if="${#fields.hasErrors('startDate')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{startDate}"></div>
+										</div>
+										<div class="col-6">
+											<label class="col-form-label">Ngày kết thúc:</label> <input
+												type="date" class="form-control" th:field="*{endDate} " />
+											<div th:if="${#fields.hasErrors('endDate')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{endDate}"></div>
+										</div>
+									</div>
+
+									<!--Tổng số tiền trạng thái-->
+									<div class="row">
+										 <div class="col-6">
+											<label class="col-form-label">Tổng tiền quyên góp:</label> <input
+												class="form-control" readonly="readonly" placeholder="0 VND"
+												></input>
+										</div> 
+										<div class="col-6">
+											<label for="status" class="col-form-label">Trạng
+												thái:</label> <select id="status" th:field="*{status}"
+												class="form-control">
+												<option value="-1">----</option>
+												<option value="0">Mới tạo</option>
+												<option value="1">Đang quyên góp</option>
+												<option value="2">Kết thúc quyên góp</option>
+												<option value="3">Đóng quyên góp</option>
+											</select>
+											<div th:if="${#fields.hasErrors('status')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{status}"></div>
+										</div>
+									</div>
+
+									<!--Tổ chức & số đt-->
+									<div class="row">
+										<div class="col-6">
+											<label for="organizationName" class="col-fo rm-label">Tổ
+												chức:</label> <input id="organizationName" type="text"
+												class="form-control" th:field="*{organizationName} " />
+											<div th:if="${#fields.hasErrors('organizationName')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{organizationName}"></div>
+										</div>
+										<div class="col-6">
+											<label for="phoneNumber" class="col-form-label">Số
+												điện thoại:</label> <input id="phoneNumber" type="number"
+												class="form-control" th:field="*{phoneNumber}" />
+											<div th:if="${#fields.hasErrors('phoneNumber')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{phoneNumber}"></div>
+
+										</div>
+									</div>
+
+									<!--Địa điểm & nội dung-->
+									<div class="row">
+										<div class="col-12">
+											<label for="loacl" class="col-form-label">Địa điểm:</label> <input
+												id="local" type="text" class="form-control"
+												th:field="*{local}" />
+											<div th:if="${#fields.hasErrors('local')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{local}"></div>
+
+										</div>
+										<div class="col-12">
+											<label class="col-form-label">Nội dung:</label>
+											<textarea class="form-control custom-input" rows="3"
+												th:field="*{description} "></textarea>
+											<div th:if="${#fields.hasErrors('description')}"
+												class="alert alert-warning ml-3" style="width: 93%;"
+												th:errors="*{description}"></div>
+										</div>
+									</div>
+									<div class="d-flex justify-content-between">
+										<a th:href="@{/admin/donations}" type="button"
+											style="width: 80px" class="btn btn-secondary m-2"> Back
+										</a> <input class="btn btn-secondary m-2"
+											style="width: 80px; background-color: dodgerblue;"
+											type="submit" value="Lưu" />
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+
+
+				</main>
+			</div>
+			<footer class="py-4 bg-light mt-auto">
+				<div class="container-fluid px-4"></div>
+			</footer>
+		</div>
+	</div>
+</body>
+
+</html>
